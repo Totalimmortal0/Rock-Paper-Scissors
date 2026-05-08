@@ -1,3 +1,22 @@
+const buttons = document.querySelectorAll("button")
+const rockBtn = document.querySelector(".rockBtn")
+const paperBtn = document.querySelector(".paperBtn")
+const scissorsBtn = document.querySelector(".scissorsBtn")
+const playerScore = document.querySelector(".playerScore")
+const compScore = document.querySelector(".compScore")
+const scoreDiv = document.querySelector(".scoreDiv")
+const result = document.querySelector(".result")
+
+let playerScoreCount = 0
+let computerScoreCount = 0
+
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.innerText, getComputerChoice())
+        isGameFinished()
+    })
+})
+
 function getComputerChoice() {
     const randomNum = Math.floor(Math.random() * 3)
 
@@ -24,55 +43,59 @@ function getHumanChoice() {
     }
 }
 
+function updateScore() {
+    playerScore.innerText = playerScoreCount
+    compScore.innerText = computerScoreCount
+}
+updateScore()
 
-
-function playGame() {
-    let humanScore = 0
-    let computerScore = 0
-
-    function playRound(humanChoice, computerChoice) {
-        if (humanChoice === "rock" && computerChoice === "scissors") {
-            humanScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Rock beats Scissors")
-        } else if (computerChoice === "rock" && humanChoice === "scissors") {
-            computerScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Rock beats Scissors")
+function isGameFinished() {
+    if (playerScoreCount >= 5 || computerScoreCount >= 5) {
+        if (playerScoreCount > computerScoreCount) {
+            result.innerText = (`You win!\n==Final Score==\nYou: ${playerScoreCount} | Computer: ${computerScoreCount}`)
+        } else if (playerScoreCount < computerScoreCount) {
+            result.innerText = (`You lose!\n==Final Score==\nYou: ${playerScoreCount} | Computer: ${computerScoreCount}`)
+        } else {
+            result.innerText = (`It's a draw!\n==Final Score==\nYou: ${playerScoreCount} | Computer: ${computerScoreCount}`)
         }
-
-        if (humanChoice === "scissors" && computerChoice === "paper") {
-            humanScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Scissors beats paper")
-        } else if (computerChoice === "scissors" && humanChoice === "paper") {
-            computerScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Scissors beats paper")
-        }
-
-        if (humanChoice === "paper" && computerChoice === "rock") {
-            humanScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Paper beats Rock")
-        } else if (computerChoice === "paper" && humanChoice === "rock") {
-            computerScore++
-            console.log(`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Paper beats Rock")
-        }
-
-        if (humanChoice === computerChoice) {
-            console.log(`Draw! You Chose: ${humanChoice} | Computer chose: ${computerChoice}`)
-        }
-    }
-
-    for (let round = 1; round <= 5; round++) {
-        let computerChoice = getComputerChoice()
-        let humanChoice = getHumanChoice()
-        playRound(humanChoice, computerChoice)
-    }
-
-    if (humanScore > computerScore) {
-        console.log(`You win!\n==Final Score==\nYou: ${humanScore} | Computer: ${computerScore}`)
-    } else if (humanScore < computerScore) {
-        console.log(`You lose!\n==Final Score==\nYou: ${humanScore} | Computer: ${computerScore}`)
-    } else {
-        console.log(`It's a draw!\n==Final Score==\nYou: ${humanScore} | Computer: ${computerScore}`)
+        return true
     }
 }
 
-playGame()
+function playRound(humanChoice, computerChoice) {
+    if (isGameFinished()) {
+        return
+    }
+    humanChoice = humanChoice.toLowerCase()
+
+    if (humanChoice === "rock" && computerChoice === "scissors") {
+        playerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Rock beats Scissors")
+    } else if (computerChoice === "rock" && humanChoice === "scissors") {
+        computerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Rock beats Scissors")
+    }
+
+    if (humanChoice === "scissors" && computerChoice === "paper") {
+        playerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Scissors beats paper")
+    } else if (computerChoice === "scissors" && humanChoice === "paper") {
+        computerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Scissors beats paper")
+    }
+
+    if (humanChoice === "paper" && computerChoice === "rock") {
+        playerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou win! Paper beats Rock")
+    } else if (computerChoice === "paper" && humanChoice === "rock") {
+        computerScoreCount++
+        result.innerText = (`You Chose: ${humanChoice} | Computer chose: ${computerChoice}` + "\nYou lose! Paper beats Rock")
+    }
+
+    if (humanChoice === computerChoice) {
+        result.innerText = (`Draw! You Chose: ${humanChoice} | Computer chose: ${computerChoice}`)
+    }
+
+    updateScore()
+}
+
